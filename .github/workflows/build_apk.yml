@@ -17,7 +17,14 @@ jobs:
 
     - name: Build APK using Buildozer Docker
       run: |
-        docker run --rm -v "$PWD":/app kivy/buildozer:latest bash -c "cd /app && buildozer android debug"
+        # Fix permissions for the build directory
+        sudo chown -R 1000:1000 .
+        
+        # Run buildozer as the 'user' inside the container
+        docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer:latest android debug
+        
+        # Fix permissions back so GitHub Actions can upload artifacts
+        sudo chown -R $USER:$USER .
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
