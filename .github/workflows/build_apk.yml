@@ -20,6 +20,13 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 33
+        build-tools: '33.0.0'
+        ndk-version: '25.2.9519653'
+
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -63,7 +70,8 @@ jobs:
       run: |
         buildozer android debug
       env:
-        ANDROID_SDK_HOME: ~/.buildozer/android/platform/android-sdk
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         GRADLE_OPTS: -Xmx2048m
 
     - name: Upload APK
