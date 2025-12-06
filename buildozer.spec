@@ -32,13 +32,18 @@ fullscreen = 0
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
 # (int) Target Android API, should be as high as possible.
-android.api = 33
+# (int) Target Android API, should be as high as possible.
+android.api = 31
 
 # (int) Minimum API your APK will support.
 android.minapi = 21
 
 # (str) Android NDK version to use
 android.ndk = 25b
+
+# (str) python-for-android branch to use, if not master, useful to try
+# not yet merged features.
+#p4a.branch = master
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 android.private_storage = True
