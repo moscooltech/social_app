@@ -20,17 +20,23 @@ jobs:
         # Fix permissions for the build directory
         sudo chown -R 1000:1000 .
         
-        # Run buildozer with license acceptance and proper SDK setup
-        docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer:latest /bin/bash -c "
-          # Accept all Android SDK licenses
-          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-          echo '24333f8a63b6825ea9c5514f83c2829b004d1fee' > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          echo 'd56f5187479451eabf01fb78af6dfcb131a6481e' >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          echo '84831b9409646a918e30573bab4c9c91346d8abd' > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
-          
-          # Run buildozer with yes to accept any remaining prompts
-          yes | buildozer android debug || buildozer android debug
-        "
+        # Run buildozer with entrypoint override to run bash commands
+        docker run --rm \
+          --entrypoint /bin/bash \
+          -v "$PWD":/home/user/hostcwd \
+          kivy/buildozer:latest \
+          -c "
+            cd /home/user/hostcwd
+            
+            # Accept all Android SDK licenses
+            mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+            echo '24333f8a63b6825ea9c5514f83c2829b004d1fee' > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+            echo 'd56f5187479451eabf01fb78af6dfcb131a6481e' >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+            echo '84831b9409646a918e30573bab4c9c91346d8abd' > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+            
+            # Run buildozer with yes to accept any remaining prompts
+            yes | buildozer android debug
+          "
         
         # Fix permissions back so GitHub Actions can upload artifacts
         sudo chown -R $USER:$USER .
