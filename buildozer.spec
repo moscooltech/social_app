@@ -41,6 +41,9 @@ android.minapi = 21
 # (str) Android NDK version to use
 android.ndk = 25b
 
+# (str) Android SDK build-tools version to use
+android.build_tools_version = 34.0.0
+
 # (str) python-for-android branch to use, if not master, useful to try
 # not yet merged features.
 #p4a.branch = master
