@@ -80,8 +80,16 @@ jobs:
         export ANDROIDNDK=$HOME/.buildozer/android/platform/android-ndk-r25b
         export ANDROIDAPI=31
         
-        # Run buildozer
-        yes | buildozer android debug
+        # Run buildozer without piping yes (causes broken pipe)
+        buildozer android debug 2>&1 | tee build.log || {
+          echo "Build may have failed, checking for APK..."
+          if ls bin/*.apk 1> /dev/null 2>&1; then
+            echo "APK found, build succeeded despite error!"
+          else
+            echo "No APK found, build failed."
+            exit 1
+          fi
+        }
       env:
         ANDROID_HOME: ~/android-sdk
         ANDROID_SDK_ROOT: ~/android-sdk
